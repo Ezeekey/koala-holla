@@ -14,6 +14,7 @@ table, th, td, tr {
     font-weight: bold;
     font-style: italic;
     color: darkviolet;
+    background-color: rgba(181, 181, 181, 0.25);
 }
 
 title, h1, h2, h3 {
@@ -23,7 +24,7 @@ title, h1, h2, h3 {
     color: darkviolet;
 }
 
-input, button, label {
+input, button {
     border: solid;
     border-radius: 40px;
     padding: 10px;
@@ -37,14 +38,17 @@ input, button, label {
 
 .delete-button {
     background-color: coral;
+    
 }
 
 .mark-as-read {
     background-color: darkseagreen;
+    
 }
 
 .edit {
     background-color: blanchedalmond;
+    
 }
 
 
@@ -76,4 +80,27 @@ button {
 button:hover {
     opacity: .6;
     transition-duration: .6s;
+}
+
+.translucent {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.translucent td{
+    background-color: black;
+}
+
+label {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    border: solid;
+    border-radius: 40px;
+    padding: 10px;
+}
+
+th{
+    background-color: rgba(255, 255, 255, 0.85);
+}
+
+button.hidden {
+    display: none;
 }

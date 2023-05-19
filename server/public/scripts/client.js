@@ -2,7 +2,7 @@ console.log('js');
 
 // Variable to tell submit button whether it is edit mode or not.
 let editMode = false;
-let selectedKoalaId = 0;
+let selectedKoalaObject = {};   // Take care not to set this to a single object array
 
 $(document).ready(function () {
   console.log('JQ');
@@ -17,8 +17,6 @@ function setupClickListeners() {
   $('#addButton').on('click', function () {
     console.log('in addButton on click');
     // get user input and put in an object
-    // NOT WORKING YET :(
-    // using a test object
     let koalaToSend = {
       name: $('#nameIn').val(),
       age: $('#ageIn').val(),
@@ -27,7 +25,11 @@ function setupClickListeners() {
       notes: $('#notesIn').val(),
     };
     // call saveKoala with the new obejct
-    saveKoala(koalaToSend);
+    if (editMode) {
+      cancelEdit();
+    } else {
+      saveKoala(koalaToSend);
+    }
   });
   // Click handler for ready buttons.
   $("#viewKoalas").on('click', ".mark-as-read", markAsReady);
@@ -36,7 +38,10 @@ function setupClickListeners() {
   $('#viewKoalas').on('click', '.delete-button', deleteKoala);
 
   // click handler for edit button
-  $('#viewKoalas').on('click', '.edit', editKoala)
+  $('#viewKoalas').on('click', '.edit', editKoala);
+
+  // Click handler for cancel button.
+  $('#cancelEdit').on('click', cancelEdit);
 }
 
 function markAsReady(event) {
@@ -80,14 +85,14 @@ function getKoalas() {
       }
       $('#viewKoalas').append(`
       <tr data-id="${koala.id}">
-        <td>${koala.name}</td>
-        <td>${koala.age}</td>
-        <td>${gender}</td>
-        <td>${ready}</td>
-        <td>${koala.notes}</td>
-        <td><button class="mark-as-read">${readyButton}</button</td>
-        <td><button class="delete-button">Remove</button></td>
-        <td><button class="edit">Edit</button></td>
+        <td class="translucent">${koala.name}</td>
+        <td class="translucent">${koala.age}</td>
+        <td class="translucent">${gender}</td>
+        <td class="translucent">${ready}</td>
+        <td class="translucent">${koala.notes}</td>
+        <td class="translucent"><button class="mark-as-read">${readyButton}</button</td>
+        <td class="translucent"><button class="delete-button">Remove</button></td>
+        <td class="translucent"><button class="edit">Edit</button></td>
       </tr>`)
     }
   }).catch(err => {
@@ -121,15 +126,24 @@ function editKoala(event) {
   // send an ajax request that will get the targeted book. 
   $.ajax({
     method: 'GET',
-    url: `/koalas/edit/${selectedKoalaId}`
+    url: `/koalas/${selectedKoalaId}`
   }).then(response => {
-    selcetedKoala = response[0];
-    console.log('should have the selected koala properties', selcetedKoala);
-    $('#nameIn').val(selcetedKoala.name);
-    $('#ageIn').val(selcetedKoala.age);
-    $('#genderIn').val(selcetedKoala.gender);
-    $('#readyForTransferIn').prop('checked');
-    $('#')
+    const selectedKoala = response[0];
+    // Turn the data from body into data types that are not strings.
+    selectedKoala.gender = String(selectedKoala.gender);
+    selectedKoala.age = Number(selectedKoala.age);
+    selectedKoala.ready = Boolean(selectedKoala.ready);
+
+    console.log(selectedKoala.gender);
+
+    console.log('should have the selected koala properties', selectedKoala);
+    $('#nameIn').val(selectedKoala.name);
+    $('#ageIn').val(selectedKoala.age);
+    $('#genderIn').val(selectedKoala.gender);
+    $('#readyForTransferIn').prop('checked', selectedKoala.ready);
+    $('#notesIn').val(selectedKoala.notes);
+
+    startEdit();
   }).catch(err => {
     console.log('got an error getting the selected id', err)
   })
@@ -141,7 +155,7 @@ function clearInputs() {
   $('#nameIn').val('');
   $('#ageIn').val('');
   $('#genderIn').val('true');
-  $('#readyForTransferIn').val('');
+  $('#readyForTransferIn').prop('checked', false);
   $('#notesIn').val('');
 }
 
@@ -155,14 +169,14 @@ function deleteKoala(event) {
     buttons: true,
     dangerMode: true
   }).then((willDelete) => {
-    if (willDelete){
+    if (willDelete) {
       $.ajax({
         method: 'DELETE',
         url: `/koalas/${koalaId}`
       }).then((res) => {
         getKoalas()
-        swal("Poof! Your koala has been yeeted!",{
-        icon: "success",
+        swal("Poof! Your koala has been yeeted!", {
+          icon: "success",
         });
       }).catch((err) => {
         swal('What did you do d00d?', err);
@@ -175,3 +189,13 @@ function deleteKoala(event) {
 }
 
 
+function cancelEdit() {
+  editMode = false;
+  clearInputs();
+  $('#cancelEdit').addClass('hidden');
+}
+
+function startEdit() {
+  editMode = true;
+  $('#cancelEdit').removeClass('hidden');
+}

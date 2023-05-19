@@ -54,10 +54,13 @@ router.put('/ready/:id', (req, res) => {
     });
 });
 
+// PUT to edit whole koalas.
+router.put('/edit/:id', (req, res) => {
 
+});
 
-// GET for EDITing koalas
-router.get('/edit/:id', (req, res) => {
+// GET for GETTing  single koalas
+router.get('/:id', (req, res) => {
     let reqId = req.params.id
     console.log('this is what we are selecting', reqId);
     let queryText = `SELECT * FROM "koala" WHERE "id"=$1`
