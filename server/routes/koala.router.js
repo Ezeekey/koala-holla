@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
         console.log('error getting koalas', error);
         res.sendStatus(500);
 });
-});$1
+});
 
 
 // POST
@@ -23,8 +23,8 @@ router.get('/', (req, res) => {
 // PUT READY
 router.put('/ready/:id', (req, res) => {
     console.log(req.body)
-    let ready = req.body.ready;
-    let queryText = `UPDATE "koala" SET "ready"=$1 WHERE "id"=$2;`;
+    let id = req.params.id;
+    let queryText = `UPDATE "koala" SET "ready"=true WHERE "id"=$1;`;
 
     // if (ready === 'true') {
     //     queryText = `UPDATE "koala" SET "ready"=$1 WHERE "id"=$2;`;
@@ -33,13 +33,14 @@ router.put('/ready/:id', (req, res) => {
     // }
 
 
-    pool.query(queryText, [ready]).then((response) => {
+    pool.query(queryText, [id]).then((response) => {
+        console.log(response)
         res.send(response.rows);
     }).catch(err => {
         console.log('got an error', err)
         res.sendStatus(500);
-    })
-})
+    });
+});
 
 
 
