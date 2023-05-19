@@ -7,11 +7,13 @@ const koalaRouter = express.Router();
 // GET
 
 
+
 // POST
 
 
-// PUT
+// PUT READY
 
+// PUT EDIT
 
 // DELETE
 
