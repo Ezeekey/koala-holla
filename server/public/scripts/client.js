@@ -16,11 +16,11 @@ function setupClickListeners() {
     // NOT WORKING YET :(
     // using a test object
     let koalaToSend = {
-      name: 'testName',
-      age: 'testName',
-      gender: 'testName',
-      readyForTransfer: 'testName',
-      notes: 'testName',
+      name: $('#nameIn').val(),
+      age: $('#ageIn').val(),
+      gender: $('#genderIn').val(),
+      ready: $('#readyForTransferIn').prop('checked'),
+      notes: $('#notesIn').val(),
     };
     // call saveKoala with the new obejct
     saveKoala( koalaToSend );
@@ -33,8 +33,29 @@ function getKoalas(){
   
 } // end getKoalas
 
+// Function to handle adding a new Koala to the database
 function saveKoala( newKoala ){
   console.log( 'in saveKoala', newKoala );
-  // ajax call to server to get koalas
+  $.ajax({
+    method: 'POST',
+    url: '/koalas',
+    data: newKoala
+  }).then(function(response){
+    console.log('Response from server:', response);
+    getKoalas();
+    clearInputs();
+  }).catch(function(err){
+    console.log('Error in POST', err);
+    alert('Unable to add Koala at this time.');
+  })
  
+}
+
+// Reusable function to clear the input fields
+function clearInputs(){
+  $('#nameIn').val('');
+  $('#ageIn').val('');
+  $('#genderIn').val('true');
+  $('#readyForTransferIn').val('');
+  $('#notesIn').val('');
 }

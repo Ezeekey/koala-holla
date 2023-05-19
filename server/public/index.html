@@ -18,11 +18,15 @@
   </header>
   <section id="addKoala">
     <h2>Add Koala</h2>
-    <input type="text" id="nameIn" value="" placeholder="Name">
-    <input type="text" id="ageIn" value="" placeholder="Age">
-    <input type="text" id="genderIn" value="" placeholder="Gender">
-    <input type="text" id="readyForTransferIn" value="" placeholder="Transfer">
-    <input type="text" id="notesIn" value="" placeholder="Notes">
+    <input type="text" id="nameIn" value="" placeholder="Name" maxlength="20">
+    <input type="number" id="ageIn" value="" placeholder="Age">
+    <select type="text" id="genderIn"\>
+      <option value="true">Male</option>
+      <option value="false">Female</option>
+    </select>
+    <label>Already ready?</label>
+    <input type="checkbox" id="readyForTransferIn">
+    <input type="text" id="notesIn" value="" placeholder="Notes" maxlength="250">
     <button type="button" id="addButton">Add Koala</button>
   </section>
   <section>
